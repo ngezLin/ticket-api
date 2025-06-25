@@ -63,7 +63,7 @@ func (s *userService) Login(email, password string) (*entity.User, string, error
 	// Generate JWT token
 	token, err := utils.GenerateJWT(user.ID, user.Role)
 	if err != nil {
-		return nil, "", errors.New("Error in generating JWTtoken")
+		return nil, "", errors.New("error in generating JWT token")
 	}
 
 	return user, token, nil

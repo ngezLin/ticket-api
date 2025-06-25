@@ -13,6 +13,7 @@ type EventRepository interface {
 	Create(event *entity.Event) error
 	Update(event *entity.Event) error
 	Delete(event *entity.Event) error
+	FindAllActive() ([]entity.Event, error)
 }
 
 type eventRepository struct {
@@ -57,4 +58,10 @@ func (r *eventRepository) Update(event *entity.Event) error {
 
 func (r *eventRepository) Delete(event *entity.Event) error {
 	return r.db.Delete(event).Error
+}
+
+func (r *eventRepository) FindAllActive() ([]entity.Event, error) {
+	var events []entity.Event
+	err := r.db.Preload("Category").Where("status = ?", "active").Find(&events).Error
+	return events, err
 }

@@ -9,6 +9,7 @@ import (
 
 type EventService interface {
 	GetAll() ([]entity.Event, error)
+	GetAllActive() ([]entity.Event, error)
 	Create(event entity.Event) (*entity.Event, error)
 	Update(id uint, event entity.Event) (*entity.Event, error)
 	Delete(id uint) error
@@ -36,8 +37,18 @@ func (s *eventService) Create(input entity.Event) (*entity.Event, error) {
 	}
 
 	err := s.repo.Create(&input)
-	return &input, err
+	if err != nil {
+		return nil, err
+	}
+
+	created, err := s.repo.FindByID(input.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	return created, nil
 }
+
 
 func (s *eventService) Update(id uint, input entity.Event) (*entity.Event, error) {
 	event, err := s.repo.FindByID(id)
@@ -67,4 +78,8 @@ func (s *eventService) Delete(id uint) error {
 		return errors.New("event not found")
 	}
 	return s.repo.Delete(event)
+}
+
+func (s *eventService) GetAllActive() ([]entity.Event, error) {
+	return s.repo.FindAllActive()
 }

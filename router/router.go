@@ -30,6 +30,7 @@ func SetupRoutes(r *gin.Engine, db *gorm.DB) {
 	r.POST("/register", userController.Register)
 	r.POST("/login", userController.Login)
 
+	//admin routes
 	adminGroup := r.Group("/admin")
 	adminGroup.Use(middleware.RoleMiddleware("admin")) // FIXED HERE
 	{
@@ -42,5 +43,13 @@ func SetupRoutes(r *gin.Engine, db *gorm.DB) {
 		adminGroup.POST("/events", eventController.Create)
 		adminGroup.PUT("/events/:id", eventController.Update)
 		adminGroup.DELETE("/events/:id", eventController.Delete)
+	}
+
+	// Customer routes
+	customerGroup := r.Group("/customer")
+	customerGroup.Use(middleware.RoleMiddleware("customer"))
+	{
+		customerEventController := controller.NewCustomerEventController(eventService)
+		customerGroup.GET("/events", customerEventController.GetActiveEvents)
 	}
 }
