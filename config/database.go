@@ -32,6 +32,7 @@ func SetupDatabase() *gorm.DB {
 		&entity.User{},
 		&entity.Category{},
 		&entity.Event{},
+		&entity.Ticket{},
 	)
 	if err != nil {
 		panic("Failed to migrate database: " + err.Error())

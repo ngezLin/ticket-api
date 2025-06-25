@@ -11,17 +11,25 @@ import (
 )
 
 func SetupRoutes(r *gin.Engine, db *gorm.DB) {
+	// Repositories
 	userRepo := repository.NewUserRepository(db)
-	userService := service.NewUserService(userRepo)
-	userController := controller.NewUserController(userService)
-
 	categoryRepo := repository.NewCategoryRepository(db)
-	categoryService := service.NewCategoryService(categoryRepo)
-	categoryController := controller.NewCategoryController(categoryService)
-
 	eventRepo := repository.NewEventRepository(db)
+	ticketRepo := repository.NewTicketRepository(db) // NEW
+
+	// Services
+	userService := service.NewUserService(userRepo)
+	categoryService := service.NewCategoryService(categoryRepo)
 	eventService := service.NewEventService(eventRepo)
+	ticketService := service.NewTicketService(ticketRepo, eventRepo, userRepo) // NEW
+
+	// Controllers
+	userController := controller.NewUserController(userService)
+	categoryController := controller.NewCategoryController(categoryService)
 	eventController := controller.NewEventController(eventService)
+	customerEventController := controller.NewCustomerEventController(eventService)
+	customerBalanceController := controller.NewCustomerBalanceController(userService)
+	ticketController := controller.NewTicketController(ticketService)
 
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{"message": "pong"})
@@ -49,7 +57,8 @@ func SetupRoutes(r *gin.Engine, db *gorm.DB) {
 	customerGroup := r.Group("/customer")
 	customerGroup.Use(middleware.RoleMiddleware("customer"))
 	{
-		customerEventController := controller.NewCustomerEventController(eventService)
 		customerGroup.GET("/events", customerEventController.GetActiveEvents)
+		customerGroup.PUT("/me/balance", customerBalanceController.UpdateBalance)
+		customerGroup.POST("/tickets", ticketController.Purchase)
 	}
 }

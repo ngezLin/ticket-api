@@ -11,6 +11,7 @@ import (
 type UserService interface {
 	Register(user entity.User) (*entity.User, error)
 	Login(email, password string) (*entity.User, string, error)
+	UpdateBalance(userID uint, amount float64) (*entity.User, error)
 }
 
 type userService struct {
@@ -67,4 +68,17 @@ func (s *userService) Login(email, password string) (*entity.User, string, error
 	}
 
 	return user, token, nil
+}
+
+func (s *userService) UpdateBalance(userID uint, amount float64) (*entity.User, error) {
+	if amount <= 0 {
+		return nil, errors.New("amount must be greater than 0")
+	}
+	user, err := s.repo.FindByID(userID)
+	if err != nil {
+		return nil, err
+	}
+	user.Balance += amount
+	err = s.repo.Update(user)
+	return user, err
 }

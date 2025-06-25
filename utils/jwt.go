@@ -48,3 +48,26 @@ func ExtractRoleFromJWT(c *gin.Context) (string, error) {
 
 	return role, nil
 }
+
+func ExtractUserIDFromJWT(c *gin.Context) (uint, error) {
+	authHeader := c.GetHeader("Authorization")
+	if authHeader == "" {
+		return 0, errors.New("missing auth header")
+	}
+	tokenStr := strings.Replace(authHeader, "Bearer ", "", 1)
+
+	claims := jwt.MapClaims{}
+	_, err := jwt.ParseWithClaims(tokenStr, claims, func(token *jwt.Token) (interface{}, error) {
+		return []byte(os.Getenv("JWT_SECRET")), nil
+	})
+	if err != nil {
+		return 0, err
+	}
+
+	userIDFloat, ok := claims["user_id"].(float64)
+	if !ok {
+		return 0, errors.New("invalid user_id in token")
+	}
+
+	return uint(userIDFloat), nil
+}

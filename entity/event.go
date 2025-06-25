@@ -16,4 +16,5 @@ type Event struct {
 	Capacity    int       `json:"capacity" gorm:"not null"`
 	Status      string    `json:"status" gorm:"type:enum('active','ongoing','finished');default:'active'"`
 	StartTime   time.Time `json:"start_time"`
+	Tickets []Ticket `json:"tickets,omitempty" gorm:"foreignKey:EventID"`
 }
