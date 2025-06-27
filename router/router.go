@@ -15,13 +15,13 @@ func SetupRoutes(r *gin.Engine, db *gorm.DB) {
 	userRepo := repository.NewUserRepository(db)
 	categoryRepo := repository.NewCategoryRepository(db)
 	eventRepo := repository.NewEventRepository(db)
-	ticketRepo := repository.NewTicketRepository(db) // NEW
+	ticketRepo := repository.NewTicketRepository(db)
 
 	// Services
 	userService := service.NewUserService(userRepo)
 	categoryService := service.NewCategoryService(categoryRepo)
 	eventService := service.NewEventService(eventRepo)
-	ticketService := service.NewTicketService(ticketRepo, eventRepo, userRepo) // NEW
+	ticketService := service.NewTicketService(ticketRepo, eventRepo, userRepo)
 
 	// Controllers
 	userController := controller.NewUserController(userService)
@@ -30,6 +30,8 @@ func SetupRoutes(r *gin.Engine, db *gorm.DB) {
 	customerEventController := controller.NewCustomerEventController(eventService)
 	customerBalanceController := controller.NewCustomerBalanceController(userService)
 	ticketController := controller.NewTicketController(ticketService)
+	customerTicketController := controller.NewCustomerTicketController(ticketService)
+	ReportController := controller.NewAdminReportController(ticketService)
 
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{"message": "pong"})
@@ -40,7 +42,7 @@ func SetupRoutes(r *gin.Engine, db *gorm.DB) {
 
 	//admin routes
 	adminGroup := r.Group("/admin")
-	adminGroup.Use(middleware.RoleMiddleware("admin")) // FIXED HERE
+	adminGroup.Use(middleware.RoleMiddleware("admin"))
 	{
 		adminGroup.GET("/categories", categoryController.GetAll)
 		adminGroup.POST("/categories", categoryController.Create)
@@ -51,6 +53,7 @@ func SetupRoutes(r *gin.Engine, db *gorm.DB) {
 		adminGroup.POST("/events", eventController.Create)
 		adminGroup.PUT("/events/:id", eventController.Update)
 		adminGroup.DELETE("/events/:id", eventController.Delete)
+		adminGroup.GET("/reports/sales", ReportController.GetSalesReport)
 	}
 
 	// Customer routes
@@ -60,5 +63,9 @@ func SetupRoutes(r *gin.Engine, db *gorm.DB) {
 		customerGroup.GET("/events", customerEventController.GetActiveEvents)
 		customerGroup.PUT("/me/balance", customerBalanceController.UpdateBalance)
 		customerGroup.POST("/tickets", ticketController.Purchase)
+		customerGroup.GET("/tickets", customerTicketController.GetMyTickets)
+		customerGroup.GET("/tickets/:id",  customerTicketController.GetMyTicket)
+		customerGroup.PATCH("/tickets/:id/cancel", customerTicketController.Cancel)
+
 	}
 }

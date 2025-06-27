@@ -7,6 +7,7 @@ type Ticket struct {
 	UserID   uint   `json:"user_id"`
 	EventID  uint   `json:"event_id"`
 	Quantity int    `json:"quantity"`
+	TotalPrice float64 `json:"total_price"` 
 	Status   string `json:"status" gorm:"type:enum('active','cancelled')"`
 
 	User  User  `json:"-" gorm:"foreignKey:UserID"`
