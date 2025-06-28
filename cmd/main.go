@@ -3,9 +3,9 @@ package main
 import (
 	"log"
 	"os"
-	"ticket-api/config"
+	"ticket-api/src/config"
 
-	"ticket-api/router"
+	"ticket-api/src/router"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"

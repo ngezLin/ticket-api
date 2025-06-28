@@ -2,7 +2,7 @@ package middleware
 
 import (
 	"net/http"
-	"ticket-api/utils"
+	"ticket-api/src/utils"
 
 	"github.com/gin-gonic/gin"
 )

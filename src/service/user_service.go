@@ -3,9 +3,9 @@ package service
 import (
 	"errors"
 	"strings"
-	"ticket-api/entity"
-	"ticket-api/repository"
-	"ticket-api/utils"
+	"ticket-api/src/entity"
+	"ticket-api/src/repository"
+	"ticket-api/src/utils"
 )
 
 type UserService interface {

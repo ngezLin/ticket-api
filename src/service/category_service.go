@@ -2,8 +2,8 @@ package service
 
 import (
 	"errors"
-	"ticket-api/entity"
-	"ticket-api/repository"
+	"ticket-api/src/entity"
+	"ticket-api/src/repository"
 )
 
 type CategoryService interface {

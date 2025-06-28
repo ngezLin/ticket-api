@@ -1,10 +1,10 @@
 package router
 
 import (
-	"ticket-api/controller"
-	"ticket-api/middleware"
-	"ticket-api/repository"
-	"ticket-api/service"
+	"ticket-api/src/controller"
+	"ticket-api/src/middleware"
+	"ticket-api/src/repository"
+	"ticket-api/src/service"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"

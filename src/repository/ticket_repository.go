@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"ticket-api/entity"
+	"ticket-api/src/entity"
 
 	"gorm.io/gorm"
 )

@@ -3,8 +3,8 @@ package controller
 import (
 	"net/http"
 	"strconv"
-	"ticket-api/service"
-	"ticket-api/utils"
+	"ticket-api/src/service"
+	"ticket-api/src/utils"
 
 	"github.com/gin-gonic/gin"
 )

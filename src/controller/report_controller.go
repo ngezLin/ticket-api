@@ -2,7 +2,7 @@ package controller
 
 import (
 	"net/http"
-	"ticket-api/service"
+	"ticket-api/src/service"
 
 	"github.com/gin-gonic/gin"
 )
